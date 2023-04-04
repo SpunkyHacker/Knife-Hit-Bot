@@ -26,8 +26,13 @@ while(True):
 
     # press 'q' with the output window focused to exit.
     # waits 1 ms every loop to process key presses
-    if cv.waitKey(1) == ord('q'):
+    key = cv.waitKey(1)
+    if key == ord('q'):
         cv.destroyAllWindows()
         break
+    elif key == ord('f'):
+        cv.imwrite('positive/{}.jpg'.format(loop_time), screenshot)
+    elif key == ord('d'):
+        cv.imwrite('negative/{}.jpg'.format(loop_time), screenshot)
 
 print('Done.')
