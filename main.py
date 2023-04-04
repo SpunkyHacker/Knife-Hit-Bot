@@ -10,27 +10,24 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 # initialize the WindowCapture class
-#wincap = WindowCapture('Albion Online Client')
-
-WindowCapture.list_window_names()
+wincap = WindowCapture('BlueStacks')
 
 loop_time = time()
-# while(True):
+while(True):
 
-#     # get an updated image of the game
-#     screenshot = wincap.get_screenshot()
+    # get an updated image of the game
+    screenshot = wincap.get_screenshot()
 
-#     cv.imshow('Computer Vision', screenshot)
+    cv.imshow('Computer Vision', screenshot)
 
-#     # debug the loop rate
-#     print('FPS {}'.format(1 / (time() - loop_time)))
-#     loop_time = time()
+    # debug the loop rate
+    print('FPS {}'.format(1 / (time() - loop_time)))
+    loop_time = time()
 
-#     # press 'q' with the output window focused to exit.
-#     # waits 1 ms every loop to process key presses
-#     if cv.waitKey(1) == ord('q'):
-#         cv.destroyAllWindows()
-#         break
+    # press 'q' with the output window focused to exit.
+    # waits 1 ms every loop to process key presses
+    if cv.waitKey(1) == ord('q'):
+        cv.destroyAllWindows()
+        break
 
-
-# print('Done.')
+print('Done.')
