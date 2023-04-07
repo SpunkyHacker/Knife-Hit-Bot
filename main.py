@@ -26,7 +26,7 @@ def getRandomTime():
     print('got random time:',time)
     return time
 
-def checkDatabase(linenum):
+def checkDatabase(linenum): #OK
     print('checked Database')
     line = linecache.getline(r"database.txt", linenum)
     if len(line) == 0:
@@ -34,16 +34,19 @@ def checkDatabase(linenum):
     else:
         return True
 
-def getTimeInDatabase(linenum):
+def getTimeInDatabase(linenum): #OK
     line = linecache.getline(r"database.txt", linenum)
     print('got time:',line)
-    return int(line)
+    try: 
+        return int(line)
+    except ValueError:
+        return 0
 
 def appendDatabase(linenum , time):
     with open("database.txt") as file:
         data = file.readlines()
     try:
-        data[linenum] = str(time)
+        data[linenum - 1] = str(time) + "\n"
         with open("database.txt", 'w') as file:
             file.writelines(data)
     except IndexError:
