@@ -1,5 +1,6 @@
 from pyautogui import *
 import pyautogui
+import time
 import keyboard
 import random
 import win32api, win32con
@@ -7,12 +8,12 @@ import linecache
 
 KNIFE = (270,190)
 RESET = (278,734) #if Red  == 0 then its reset button
-START = (414,198)
+START = [(414,198),(400,740)]
 reseted = False
 count = 0
 
 def start():
-    click(START)
+    click(START[1])
 
 def click(coords):
     print("clicked..")
@@ -44,7 +45,7 @@ def getTimeInDatabase(linenum): #OK
     line = linecache.getline(r"database.txt", linenum)
     print(f'{str(count)} --> gotfromDatabase: {line}')
     try: 
-        return int(line)
+        return float(line)
     except ValueError:
         return 0
 
@@ -65,23 +66,21 @@ def deleteData():
 
 def main():
     start() 
-    # sleep(0.5)
     line = 1
     while keyboard.is_pressed('q') == False:
-        # sleep(0.5)
         flag = checkDatabase(line)
         print(flag,line)
         if flag == True:
             sleep(1)
             t = getTimeInDatabase(line)
             print("i wanted to wait:",t)
-            sleep(t)
+            time.sleep(t)
             
             click(KNIFE)
             x,y=RESET
             print("@")
+            sleep(2)
             if pyautogui.pixel(x,y)[0] == 0:
-                sleep(1)
                 print("Data in database is wrong!")
                 break
         elif flag == False:
@@ -91,7 +90,7 @@ def main():
             click(KNIFE)
             x,y=RESET
             print("#")
-            # sleep(2)
+            sleep(2)
             if pyautogui.pixel(x,y)[0] != 0:
                 appendDatabase(t)
 
