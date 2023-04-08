@@ -1,6 +1,5 @@
 from pyautogui import *
 import pyautogui
-import time
 import keyboard
 import random
 import win32api, win32con
@@ -9,50 +8,52 @@ import linecache
 KNIFE = (270,190)
 RESET = (278,734) #if Red  == 0 then its reset button
 START = (414,198)
+reseted = False
+count = 0
 
 def start():
     click(START)
 
 def click(coords):
-    print("clickedd")
+    print("clicked..")
     win32api.SetCursorPos(coords)
     win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
-    time.sleep(0.01)
+    sleep(0.01)
     win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
 
 def getRandomTime():
-    time =  random.randint(1,3)
-    print('got random time')
+    time =  random.uniform(1.0,3.0)
+    time = round(time,1)
+    print("generated random number:",time)
     return time
 
 def checkDatabase(linenum): #OK
-    print('checked Database')
-    line = linecache.getline(r"database.txt", linenum)
-    if len(line) == 0:
+    with open('database.txt') as file:
+        data = file.readlines()
+    try:
+        if len(data[linenum-1]) > 0:
+            return True
+        else:
+            return False    
+    except IndexError:
         return False
-    else:
-        return True
 
 def getTimeInDatabase(linenum): #OK
-    print('getting time')
+    global count
+    count+=1
     line = linecache.getline(r"database.txt", linenum)
+    print(f'{str(count)} --> gotfromDatabase: {line}')
     try: 
         return int(line)
     except ValueError:
         return 0
 
 def appendDatabase(time):
+    global count
+    count+=1
     with open("database.txt",'a') as file:
         file.write(str(time)+"\n")
-    print('appended time')
-# def deleteData(line):
-#     print(line)
-#     with open("database.txt","r") as file:
-#         data = file.readlines()
-#     data[line-1] = "\n"
-#     with open('database.txt','w') as file:
-#         file.writelines(data)
-#     print('deleted data')
+    print(f'{str(count)} --> appended: {time}')
 
 def deleteData():
     with open("database.txt") as file:
@@ -63,32 +64,43 @@ def deleteData():
 
 
 def main():
-    start()
-    sleep(1)
+    start() 
+    # sleep(0.5)
     line = 1
     while keyboard.is_pressed('q') == False:
+        # sleep(0.5)
         flag = checkDatabase(line)
+        print(flag,line)
         if flag == True:
-            time = getTimeInDatabase(line)
-            sleep(time)
+            sleep(1)
+            t = getTimeInDatabase(line)
+            print("i wanted to wait:",t)
+            sleep(t)
+            
             click(KNIFE)
             x,y=RESET
-            sleep(0.5)
+            print("@")
             if pyautogui.pixel(x,y)[0] == 0:
+                sleep(1)
                 print("Data in database is wrong!")
+                break
         elif flag == False:
-            time = getRandomTime()
-            sleep(time)
+            sleep(1)
+            t = getRandomTime()
+            sleep(t)
             click(KNIFE)
             x,y=RESET
-            sleep(0.5)
+            print("#")
+            # sleep(2)
             if pyautogui.pixel(x,y)[0] != 0:
-                appendDatabase( time)
+                appendDatabase(t)
+
             else:
-                print('came in here')
-                break
                 click(RESET)
+                print("#####\nRESETED\n#####")
+                line = 0
         line+=1
+        
         
 
 
