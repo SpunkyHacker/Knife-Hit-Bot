@@ -23,7 +23,7 @@ def click(x,y):
 
 def getRandomTime():
     time =  random.randint(1,5)
-    print('got random time:',time)
+    print('got random time')
     return time
 
 def checkDatabase(linenum): #OK
@@ -35,8 +35,8 @@ def checkDatabase(linenum): #OK
         return True
 
 def getTimeInDatabase(linenum): #OK
+    print('getting time')
     line = linecache.getline(r"database.txt", linenum)
-    print('got time:',line)
     try: 
         return int(line)
     except ValueError:
@@ -52,15 +52,24 @@ def appendDatabase(linenum , time):
     except IndexError:
         with open("database.txt",'a') as file:
             file.write(str(time)+"\n")
-    print('appended the time:',time)
+    print('appended time')
     
-def deleteData(line):
-    with open("database.txt","r") as file:
+# def deleteData(line):
+#     print(line)
+#     with open("database.txt","r") as file:
+#         data = file.readlines()
+#     data[line-1] = "\n"
+#     with open('database.txt','w') as file:
+#         file.writelines(data)
+#     print('deleted data')
+
+def deleteData():
+    with open("database.txt") as file:
         data = file.readlines()
-    data[line] = ""
+    data[-1] = ""
     with open('database.txt','w') as file:
         file.writelines(data)
-    print('deleted data')
+
 
 def main():
     countdown = 1
@@ -69,8 +78,11 @@ def main():
         while True: # comes here after geting reset button
             countdown = 1 
             while True: #illitrate until successful 
+                print(countdown)
                 if pyautogui.pixel(283, 733)[0] == 0: #checks for reset button
+                    print("countdown before deleting",countdown)
                     click(283, 733) #clicks reset
+                    deleteData()
                     break
                 flag = checkDatabase(countdown) #checks for pre loaded data
                 if flag: # gets the pre loaded data and clicks
@@ -80,7 +92,7 @@ def main():
                     if pixel(283, 733)[0] == 4: # check if we are in game  " that is the previous move was successful"
                         countdown+=1
                     else:
-                        deleteData(countdown)
+                        print('try failed')
                 else: # generates randomly and clicks
                     newTime = getRandomTime()
                     sleep(newTime)
@@ -89,7 +101,7 @@ def main():
                         appendDatabase(countdown,newTime) #stores the new data
                         countdown+=1
                     else:
-                        pass
+                        print('try failed')
                     
 
 
